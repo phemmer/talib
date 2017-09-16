@@ -3,8 +3,9 @@ A Go(lang) wrapper for TA-Lib(Techinal Analysis Library) which is often used for
 
 http://ta-lib.org/
 
-[![Build Status](https://travis-ci.org/d4l3k/talib.svg?branch=master)](https://travis-ci.org/d4l3k/talib)
-[![GoDoc](https://godoc.org/github.com/d4l3k/talib?status.svg)](https://godoc.org/github.com/d4l3k/talib)
+This is a fork of [github.com/d4l3k/talib](https://github.com/d4l3k/talib) to address issues with function parameters ([#2](https://github.com/d4l3k/talib/issues/2) & [#3](https://github.com/d4l3k/talib/issues/3)).
+
+[![GoDoc](https://godoc.org/github.com/phemmer/talib?status.svg)](https://godoc.org/github.com/phemmer/talib)
 
 To use the library you need TA-Lib installed.
 
@@ -16,7 +17,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/d4l3k/talib"
+	"github.com/phemmer/talib"
 )
 
 func main() {
@@ -30,7 +31,7 @@ func main() {
 Install the dependencies then run
 
 ```
-$ go install github.com/d4l3k/talib
+$ go install github.com/phemmer/talib
 ```
 
 ### Dependencies

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/d4l3k/talib"
+	"github.com/phemmer/talib"
 )
 
 func Example() {

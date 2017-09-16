@@ -1,11 +1,11 @@
 package talib_test
 
 import (
-	"github.com/d4l3k/talib"
-
 	"math"
 	"reflect"
 	"testing"
+
+	"github.com/phemmer/talib"
 )
 
 func TestInit(t *testing.T) {
