@@ -28,6 +28,16 @@ def camelize name
   return parts.join("")
 end
 
+lines = File.read('/usr/include/ta-lib/ta_defs.h').split("\n")
+
+headers = []
+lines.each do |line|
+  if m = line.match(/ENUM_DEFINE\(\s*TA_(MAType_\w+)[^=]+=\s*(\d)/)
+    headers << "const #{m[1]} = #{m[2]}"
+  end
+end
+
+
 lines = File.read('/usr/include/ta-lib/ta_func.h').split("\n")
 
 recent_comment = ""
@@ -57,6 +67,8 @@ class Func
     params = []
     returns = []
     returnTypes = []
+    nbSlice = false
+    begIdx = true
     i = 0
     @args.each do |arg_set|
       type = arg_set[-2] #arg_set[0..-2].join(" ")
@@ -70,6 +82,11 @@ class Func
       elsif arg.start_with? "*out"
         body << "var #{arg[1..-1]} C.#{type}"
         params << "&#{arg[1..-1]}"
+        if arg == "*outNBElement"
+          nbSlice = true
+        elsif arg == "*outBegIdx"
+          begIdx = true
+        end
       elsif arg.start_with?("in") || arg.start_with?("optIn")
         param = arg[2..-1].match(/(\w*)(\[\])?/)[1]
         if arg.start_with? "optIn"
@@ -98,9 +115,14 @@ class Func
         goType = $types[type.split(" ").last]
         goType = type if !goType
         if arg.end_with? "[]"
-          body << "#{param} := make([]#{goType}, len(#{args.first.split(" ").first}))"
+          args << "#{param} []#{goType}"
+          body << "if #{param} == nil { #{param} = make([]#{goType}, len(#{args.first.split(" ").first})) }"
           params << "(*C.#{type})(unsafe.Pointer(&#{param}[0]))"
-          returns << param
+          if nbSlice
+            returns << "#{param}[:outNBElement]"
+          else
+            returns << param
+          end
           returnTypes << "[]#{goType}"
         else
           params << "(*C.#{type})(unsafe.Pointer(&#{param}))"
@@ -111,6 +133,15 @@ class Func
 
       i += 1
     end
+    if begIdx
+      returns << "int(outBegIdx)"
+      returnTypes << "int"
+    end
+    if @args.include?("outBegIdx")
+      returns << "outBegIdx"
+      returnTypes << "int"
+    end
+
     s = @comment + "\n"
     s += "func #{@name}"
     s += "(" + args.join(", ") + ")"
@@ -173,6 +204,7 @@ func init() {
 	}
 }
 "
+code += headers.join("\n") + "\n\n"
 code += funcs.map(&:to_go).join("\n")
 
 File.write("generated.go", code)
