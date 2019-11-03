@@ -188,7 +188,7 @@ end
 
 
 code = "package talib
-// #cgo LDFLAGS: -lta_lib
+// #cgo LDFLAGS: -lta_lib -lm
 // #include \"ta-lib/ta_libc.h\"
 import \"C\"
 
