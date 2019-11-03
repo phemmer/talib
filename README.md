@@ -76,6 +76,7 @@ $ ruby generate.rb
 ```
 
 ## License
+Copyright (c) 2019 Patrick Hemmer
 Copyright (c) 2015 [Tristan Rice](https://fn.lc)
 
 talib is licensed under the [MIT License](http://opensource.org/licenses/MIT).
